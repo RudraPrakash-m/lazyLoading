@@ -1,12 +1,20 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Loader from '../../components/loading/Loader'
 import ProductLoader from '../../components/loading/ProductLoader'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { PRODUCT_CONTEXT } from '../../context/productContext/ProductContext'
 
 const Products = () => {
-  const [products, setProducts] = useState([])
-  const [error, setError] = useState()
-  const [loading, setLoading] = useState(true)
+  // const [products, setProducts] = useState([])
+  // const [error, setError] = useState()
+  // const [loading, setLoading] = useState(true)
+  const { products, loading, error, setProducts, setError, setLoading } = useContext(PRODUCT_CONTEXT)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const cart = useSelector((state) => state.product)
+
   const fetchProducts = async () => {
     try {
       const { data } = await axios.get('https://fakestoreapi.com/products')
@@ -23,13 +31,13 @@ const Products = () => {
 
   return (
     <div>
-      {loading ? <ProductLoader/> : (
+      {loading ? <ProductLoader /> : (
         products.map((ele, index) => {
           return (
             <div key={index} className="min-h-screen bg-gray-100 py-8 px-4">
               {loading ? (
                 <div className="flex justify-center items-center h-[70vh]">
-                  <ProductLoader/>
+                  <ProductLoader />
                 </div>
               ) : (
                 <div className="max-w-7xl mx-auto">
@@ -88,11 +96,11 @@ const Products = () => {
 
                           {/* Buttons */}
                           <div className="flex gap-3 mt-6">
-                            <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition">
+                            <button onClick={() => dispatch({ type: "ADD", payload: product })} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition">
                               Add Cart
                             </button>
 
-                            <button className="flex-1 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white py-2 rounded-lg font-semibold transition">
+                            <button onClick={() => navigate(`/cart/${product.id}`)} className="flex-1 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white py-2 rounded-lg font-semibold transition">
                               Details
                             </button>
                           </div>
@@ -106,6 +114,12 @@ const Products = () => {
           )
         })
       )}
+      <button
+        onClick={() => navigate("/ai")}
+        className="fixed top-[12%] right-[3%] z-50 rounded-full w-2 h-2 flex justify-center items-center border-2 border-slate-600 bg-slate-400 text-white p-4 shadow-lg hover:bg-slate-700 transition"
+      >
+        AI
+      </button>
     </div>
   )
 }

@@ -2,6 +2,9 @@ import React, { Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { lazy } from 'react'
 import Loader from '../components/loading/Loader'
+import Cart from '../pages/cart/Cart'
+import ProductsPage from '../pages/products/ProductsPage'
+import Ai from '../components/ai/Ai'
 // import Home from '../pages/home/Home'
 // import MainLayout from '../layouts/MainLayout'
 // import About from '../pages/about/About'
@@ -35,6 +38,18 @@ const Router = () => {
                 {
                     path: "/contact",
                     element: <Contact />
+                },
+                {
+                    path: "/cart",
+                    element: <Cart />
+                },
+                {
+                    path: "/cart/:id",
+                    element: <ProductsPage />
+                },
+                {
+                    path: "/ai",
+                    element: <Ai />
                 }
             ]
         }
